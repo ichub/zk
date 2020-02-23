@@ -79,6 +79,12 @@ const TrustedSetup = () => {
 };
 
 const GenerateProof = ({ circuit }: { circuit: Circuit }) => {
+  const [proof, setProof] = useState("");
+
+  function doProof() {
+    setProof(generateProof(circuit, "", []));
+  }
+
   return (
     <Container>
       <h3>proof generator</h3>
@@ -89,6 +95,9 @@ const GenerateProof = ({ circuit }: { circuit: Circuit }) => {
           {input.name}: <input type="text" />
         </span>
       ))}
+      <br />
+      <input type="button" value="generate proof" onClick={doProof} /> <br />
+      proof: <Label>{proof}</Label>
     </Container>
   );
 };
