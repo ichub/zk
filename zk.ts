@@ -41,6 +41,16 @@ export async function trustedSetup(
 }
 
 export function verify(publicInputs: PublicInputWithValue[], proof: Proof) {
+  let encodedProofValues;
+
+  try {
+    encodedProofValues = JSON.parse(atob(proof));
+  } catch {
+    return false;
+  }
+
+  console.log(encodedProofValues);
+
   return true;
 }
 
@@ -54,7 +64,7 @@ export function generateProof(
     inputValues
   };
 
-  return JSON.stringify(obj);
+  return btoa(JSON.stringify(obj));
 }
 
 export enum InputType {
