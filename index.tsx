@@ -1,8 +1,39 @@
 import * as React from "react";
 import ReactDOM from "react-dom";
-import { testExample, fibonacciCircuit } from "./exampleZk";
-import { Circuit, Input, InputType } from "./zk";
+import { Circuit, Input, InputType, generateProof, verify } from "./zk";
 import styled from "styled-components";
+import { useState } from "react";
+
+export const fibonacciCircuit = new Circuit(
+  [
+    {
+      name: "fibonacciNumber",
+      type: InputType.Public
+    }
+  ],
+  (circuit, inputValues) => {
+    return true;
+  }
+);
+
+// const proof = generateProof(fibonacciCircuit, provingKey, [
+//   {
+//     name: "fibonacciNumber",
+//     type: InputType.Public,
+//     value: "test"
+//   }
+// ]);
+
+// const isSuccess = verify(
+//   [
+//     {
+//       name: "fibonacciNumber",
+//       type: InputType.Public,
+//       value: "test"
+//     }
+//   ],
+//   proof
+// );
 
 const App = () => {
   return (
@@ -15,7 +46,18 @@ const App = () => {
 };
 
 const TrustedSetup = () => {
-  return <Container>this is the trusted setup</Container>;
+  const [setupValues, setSetupValues] = useState({
+    provingKey: "",
+    verifierKey: "",
+    toxicWaste: ""
+  });
+
+  return (
+    <Container>
+      this is the trusted setup <br /> <br />
+      <input type="button" value="do the setup" />
+    </Container>
+  );
 };
 
 const Verifier = ({ circuit }: { circuit: Circuit }) => {
