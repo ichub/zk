@@ -1,6 +1,13 @@
 import * as React from "react";
 import ReactDOM from "react-dom";
-import { Circuit, Input, InputType, generateProof, verify } from "./zk";
+import {
+  Circuit,
+  Input,
+  InputType,
+  generateProof,
+  verify,
+  trustedSetup
+} from "./zk";
 import styled from "styled-components";
 import { useState } from "react";
 
@@ -52,10 +59,20 @@ const TrustedSetup = () => {
     toxicWaste: ""
   });
 
+  function setup() {
+    setSetupValues(trustedSetup("randomness"));
+  }
+
   return (
     <Container>
-      this is the trusted setup <br /> <br />
-      <input type="button" value="do the setup" />
+      <h3>trusted setup</h3>
+      <input type="button" value="do the setup" onClick={setup} /> <br /> <br />
+      proving key: <Label>{setupValues.provingKey} </Label>
+      <br />
+      verifier key: <Label>{setupValues.verifierKey} </Label>
+      <br />
+      toxic waste: <Label>{setupValues.toxicWaste} </Label>
+      <br />
     </Container>
   );
 };
@@ -63,6 +80,7 @@ const TrustedSetup = () => {
 const Verifier = ({ circuit }: { circuit: Circuit }) => {
   return (
     <Container>
+      <h3>verifier</h3>
       verifier key: <input type="text" /> <br />
       proof: <input type="text" /> <br />
       these are the public inputs: <br />
@@ -93,7 +111,7 @@ const InputDisplay = ({ input }: { input: Input }) => {
 const CircuitDisplay = ({ circuit }: { circuit: Circuit }) => {
   return (
     <Container>
-      this is this circuit: <br />
+      <h3>circuit</h3>
       <pre>{circuit.evaluate.toString()}</pre>
       <br />
       and these are its inputs: <br />
@@ -108,6 +126,15 @@ const Container = styled.div`
   border: 1px solid black;
   margin: 8px;
   padding: 8px;
+  padding-top: 0;
+`;
+
+const Label = styled.span`
+  background-color: rgb(200, 200, 200);
+  color: grey;
+  border-radius: 4px;
+  display: inline-block;
+  padding: 4px;
 `;
 
 const div = document.createElement("div");
