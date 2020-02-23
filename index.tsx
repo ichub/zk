@@ -86,11 +86,13 @@ const TrustedSetup = () => {
 
 const GenerateProof = ({ circuit }: { circuit: Circuit }) => {
   const provingKeyRef = createRef<HTMLInputElement>();
+  const inputRefs = circuit.inputs.map(() => createRef<HTMLInputElement>());
 
   const [proof, setProof] = useState("");
 
   function doProof() {
-    setProof(generateProof(circuit, provingKeyRef.current.value, []));
+    const values = inputRefs.map(ref => ref.current.value);
+    setProof(generateProof(circuit, provingKeyRef.current.value, values));
   }
 
   return (
@@ -100,7 +102,7 @@ const GenerateProof = ({ circuit }: { circuit: Circuit }) => {
       proving key: <input ref={provingKeyRef} type="text" /> <br />
       {circuit.inputs.map((input, i) => (
         <div key={i}>
-          {input.name}: <input type="text" />
+          {input.name}: <input ref={inputRefs[i]} type="text" />
         </div>
       ))}
       <br />
