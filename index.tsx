@@ -47,6 +47,7 @@ const App = () => {
     <div>
       <TrustedSetup />
       <CircuitDisplay circuit={fibonacciCircuit} />
+      <GenerateProof circuit={fibonacciCircuit} />
       <Verifier circuit={fibonacciCircuit} />
     </div>
   );
@@ -73,6 +74,14 @@ const TrustedSetup = () => {
       <br />
       toxic waste: <Label>{setupValues.toxicWaste} </Label>
       <br />
+    </Container>
+  );
+};
+
+const GenerateProof = ({ circuit }: { circuit: Circuit }) => {
+  return (
+    <Container>
+      <h3>proof generator</h3>
     </Container>
   );
 };
