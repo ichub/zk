@@ -49,7 +49,12 @@ export function generateProof(
   provingKey: ProvingKey,
   inputValues: InputWithValue[]
 ): Proof {
-  return Math.random() + "";
+  const obj = {
+    provingKey,
+    inputValues
+  };
+
+  return JSON.stringify(obj);
 }
 
 export enum InputType {

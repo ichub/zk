@@ -16,6 +16,10 @@ export const fibonacciCircuit = new Circuit(
   [
     {
       name: "fibonacciNumber",
+      type: InputType.Private
+    },
+    {
+      name: "n",
       type: InputType.Public
     }
   ],
@@ -81,21 +85,23 @@ const TrustedSetup = () => {
 };
 
 const GenerateProof = ({ circuit }: { circuit: Circuit }) => {
+  const provingKeyRef = createRef<HTMLInputElement>();
+
   const [proof, setProof] = useState("");
 
   function doProof() {
-    setProof(generateProof(circuit, "", []));
+    setProof(generateProof(circuit, provingKeyRef.current.value, []));
   }
 
   return (
     <Container>
       <h3>proof generator</h3>
       circuit: <Label>(circuit displayed above)</Label> <br />
-      proving key: <input type="text" /> <br />
+      proving key: <input ref={provingKeyRef} type="text" /> <br />
       {circuit.inputs.map((input, i) => (
-        <span key={i}>
+        <div key={i}>
           {input.name}: <input type="text" />
-        </span>
+        </div>
       ))}
       <br />
       <input type="button" value="generate proof" onClick={doProof} /> <br />
@@ -147,7 +153,7 @@ const InputDisplay = ({ input }: { input: Input }) => {
   return (
     <div>
       <pre>
-        {input.type} {input.name}
+        <b>{input.type}</b> {input.name}
       </pre>
     </div>
   );
