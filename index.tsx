@@ -82,6 +82,13 @@ const GenerateProof = ({ circuit }: { circuit: Circuit }) => {
   return (
     <Container>
       <h3>proof generator</h3>
+      circuit: <Label>(circuit displayed above)</Label> <br />
+      proving key: <input type="text" /> <br />
+      {circuit.inputs.map((input, i) => (
+        <span key={i}>
+          {input.name}: <input type="text" />
+        </span>
+      ))}
     </Container>
   );
 };
@@ -144,6 +151,7 @@ const Label = styled.span`
   border-radius: 4px;
   display: inline-block;
   padding: 4px;
+  font-size: 80%;
 `;
 
 const div = document.createElement("div");
