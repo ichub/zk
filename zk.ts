@@ -1,3 +1,5 @@
+import { digestMessage } from "./utils";
+
 export type VerifierKey = string;
 export type ProvingKey = string;
 export type ToxicWaste = string;
@@ -24,17 +26,17 @@ export class Circuit {
   }
 }
 
-export function trustedSetup(
+export async function trustedSetup(
   trueRandomness: string
-): {
+): Promise<{
   provingKey: ProvingKey;
   verifierKey: VerifierKey;
   toxicWaste: ToxicWaste;
-} {
+}> {
   return {
-    provingKey: "adfg" + trueRandomness,
-    verifierKey: "asdf2" + trueRandomness,
-    toxicWaste: "this is toxic waste"
+    provingKey: await digestMessage("salt" + trueRandomness),
+    verifierKey: await digestMessage("salt2" + trueRandomness),
+    toxicWaste: await digestMessage("this is toxic waste")
   };
 }
 

@@ -61,8 +61,8 @@ const TrustedSetup = () => {
     toxicWaste: ""
   });
 
-  function setup() {
-    setSetupValues(trustedSetup("randomness"));
+  async function setup() {
+    setSetupValues(await trustedSetup("randomness"));
   }
 
   return (
@@ -171,8 +171,6 @@ const Container = styled.div`
   margin: 8px;
   padding: 8px;
   padding-top: 0;
-  display: inline-block;
-  width: 300px;
 `;
 
 const Label = styled.span`
