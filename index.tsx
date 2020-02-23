@@ -7,6 +7,17 @@ const App = () => {
   return (
     <div>
       <CircuitDisplay circuit={fibonacciCircuit} />
+      <Verifier circuit={fibonacciCircuit} />
+    </div>
+  );
+};
+
+const Verifier = ({ circuit }: { circuit: Circuit }) => {
+  return (
+    <div>
+      verifier key: <input type="text" /> <br />
+      proof: <input type="text" /> <br />
+      test: <input type="text" /> <br />
     </div>
   );
 };
