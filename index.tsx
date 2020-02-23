@@ -9,7 +9,7 @@ import {
   trustedSetup,
   PublicInputWithValue
 } from "./zk";
-import styled from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 import { useState, createRef } from "react";
 
 export const fibonacciCircuit = new Circuit(
@@ -45,12 +45,13 @@ export const fibonacciCircuit = new Circuit(
 
 const App = () => {
   return (
-    <div>
+    <>
+      <GlobalStyle />
       <TrustedSetup />
       <CircuitDisplay circuit={fibonacciCircuit} />
       <GenerateProof circuit={fibonacciCircuit} />
       <Verifier circuit={fibonacciCircuit} />
-    </div>
+    </>
   );
 };
 
@@ -62,7 +63,7 @@ const TrustedSetup = () => {
   });
 
   async function setup() {
-    setSetupValues(await trustedSetup("randomness"));
+    setSetupValues(await trustedSetup(Math.random() + ""));
   }
 
   return (
@@ -180,6 +181,12 @@ const Label = styled.span`
   display: inline-block;
   padding: 4px;
   font-size: 80%;
+`;
+
+const GlobalStyle = createGlobalStyle`
+    body {
+        font-family: monospace;
+    }
 `;
 
 const div = document.createElement("div");

@@ -36,7 +36,7 @@ export async function trustedSetup(
   return {
     provingKey: await digestMessage("salt" + trueRandomness),
     verifierKey: await digestMessage("salt2" + trueRandomness),
-    toxicWaste: await digestMessage("this is toxic waste")
+    toxicWaste: await digestMessage("this is toxic waste" + trueRandomness)
   };
 }
 
