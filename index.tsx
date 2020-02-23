@@ -7,7 +7,8 @@ import {
   generateProof,
   verify,
   trustedSetup,
-  PublicInputWithValue
+  PublicInputWithValue,
+  InputWithValue
 } from "./zk";
 import styled, { createGlobalStyle } from "styled-components";
 import { useState, createRef } from "react";
@@ -24,28 +25,30 @@ export const fibonacciCircuit = new Circuit(
     }
   ],
   (circuit, inputValues) => {
-    return true;
+    function fibonacci(num) {
+      var a = 1,
+        b = 0,
+        temp;
+
+      while (num >= 0) {
+        temp = a;
+        a = a + b;
+        b = temp;
+        num--;
+      }
+
+      return b;
+    }
+
+    const fibonacciNumber = inputValues.find(i => i.name === "fibonacciNumber")
+      .value;
+    const n = inputValues.find(i => i.name === "n").value;
+
+    console.log("testing: ", fibonacciNumber, n);
+
+    return fibonacci(n) === parseInt(fibonacciNumber, 10);
   }
 );
-
-// const proof = generateProof(fibonacciCircuit, provingKey, [
-//   {
-//     name: "fibonacciNumber",
-//     type: InputType.Public,
-//     value: "test"
-//   }
-// ]);
-
-// const isSuccess = verify(
-//   [
-//     {
-//       name: "fibonacciNumber",
-//       type: InputType.Public,
-//       value: "test"
-//     }
-//   ],
-//   proof
-// );
 
 const App = () => {
   return (
@@ -92,7 +95,16 @@ const GenerateProof = ({ circuit }: { circuit: Circuit }) => {
 
   function doProof() {
     const values = inputRefs.map(ref => ref.current.value);
-    setProof(generateProof(circuit, provingKeyRef.current.value, values));
+    const valuesWithDefinitions = circuit.inputs.map((input, i) => {
+      return {
+        ...input,
+        value: values[i]
+      };
+    }) as InputWithValue[];
+
+    setProof(
+      generateProof(circuit, provingKeyRef.current.value, valuesWithDefinitions)
+    );
   }
 
   return (
@@ -114,9 +126,9 @@ const GenerateProof = ({ circuit }: { circuit: Circuit }) => {
 
 const Verifier = ({ circuit }: { circuit: Circuit }) => {
   const publicInputs = circuit.inputs.filter(i => i.type === InputType.Public);
-  const inputRefs = publicInputs.map(() => createRef<HTMLInputElement>());
-  const proofRef = createRef<HTMLInputElement>();
-  const verifierKeyRef = createRef<HTMLInputElement>();
+  const inputRefs = publicInputs.map(() => createRef<HTMLTextAreaElement>());
+  const proofRef = createRef<HTMLTextAreaElement>();
+  const verifierKeyRef = createRef<HTMLTextAreaElement>();
 
   function doTheVerification() {
     const values = publicInputs.map((input, i) => {
@@ -134,14 +146,14 @@ const Verifier = ({ circuit }: { circuit: Circuit }) => {
   return (
     <Container>
       <h3>verifier</h3>
-      verifier key: <input ref={verifierKeyRef} type="text" /> <br />
-      proof: <input ref={proofRef} type="text" /> <br />
+      verifier key: <textarea ref={verifierKeyRef} /> <br />
+      proof: <textarea ref={proofRef} /> <br />
       these are the public inputs: <br />
       <br />
       {publicInputs.map((input, i) => {
         return (
           <span key={i}>
-            {input.name}: <input ref={inputRefs[i]} type="text" />
+            {input.name}: <textarea ref={inputRefs[i]} />
           </span>
         );
       })}

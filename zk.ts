@@ -14,7 +14,10 @@ export type PrivateInputWithValue = PublicInput & { value: string };
 
 export type Input = PublicInput | PrivateInput;
 export type InputWithValue = PublicInputWithValue | PrivateInputWithValue;
-export type Evaluator = (circuit: Circuit, inputValues: string[]) => void;
+export type Evaluator = (
+  circuit: Circuit,
+  inputValues: InputWithValue[]
+) => void;
 
 export class Circuit {
   public readonly inputs: Input[];
@@ -63,6 +66,8 @@ export function generateProof(
     provingKey,
     inputValues
   };
+
+  console.log(obj);
 
   return btoa(JSON.stringify(obj));
 }
