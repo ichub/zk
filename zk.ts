@@ -2,7 +2,16 @@ export type VerifierKey = string;
 export type ProvingKey = string;
 export type ToxicWaste = string;
 export type Proof = string;
+export type InputValues = {};
 
+export type PublicInput = { name: string; type: InputType.Public };
+export type PrivateInput = { name: string; type: InputType.Private };
+
+export type PublicInputWithValue = PublicInput & { value: string };
+export type PrivateInputWithValue = PublicInput & { value: string };
+
+export type Input = PublicInput | PrivateInput;
+export type InputWithValue = PublicInputWithValue | PrivateInputWithValue;
 export type Evaluator = (circuit: Circuit, inputValues: string[]) => void;
 
 export class Circuit {
@@ -29,24 +38,17 @@ export function trustedSetup(
   };
 }
 
-export function verify(
-  publicInputs: PublicInput[],
-  values: string[],
-  proof: Proof
-) {}
+export function verify(publicInputs: PublicInputWithValue[], proof: Proof) {
+  return true;
+}
 
 export function generateProof(
   circuit: Circuit,
   provingKey: ProvingKey,
-  publicInputValues: string[],
-  privateInputValues: string[]
+  inputValues: InputWithValue[]
 ): Proof {
   return Math.random() + "";
 }
-
-export type PublicInput = { name: string; type: InputType.Public };
-export type PrivateInput = { name: string; type: InputType.Private };
-export type Input = PublicInput | PrivateInput;
 
 export enum InputType {
   Public,

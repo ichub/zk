@@ -1,4 +1,4 @@
-import { trustedSetup, Circuit, InputType } from "./zk";
+import { trustedSetup, Circuit, InputType, generateProof, verify } from "./zk";
 
 // is this the 10th fibonacci number
 
@@ -17,3 +17,26 @@ const circuit = new Circuit(
     return true;
   }
 );
+
+const proof = generateProof(circuit, provingKey, [
+  {
+    name: "fibonacciNumber",
+    type: InputType.Public,
+    value: "test"
+  }
+]);
+
+const isSuccess = verify(
+  [
+    {
+      name: "fibonacciNumber",
+      type: InputType.Public,
+      value: "test"
+    }
+  ],
+  proof
+);
+
+export function testExample() {
+  return isSuccess;
+}
