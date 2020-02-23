@@ -51,6 +51,6 @@ export function generateProof(
 }
 
 export enum InputType {
-  Public,
-  Private
+  Public = "public",
+  Private = "private"
 }

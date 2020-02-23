@@ -1,7 +1,7 @@
 import * as React from "react";
 import ReactDOM from "react-dom";
 import { testExample, fibonacciCircuit } from "./exampleZk";
-import { Circuit } from "./zk";
+import { Circuit, Input } from "./zk";
 
 const App = () => {
   return (
@@ -11,11 +11,26 @@ const App = () => {
   );
 };
 
+const InputDisplay = ({ input }: { input: Input }) => {
+  return (
+    <div>
+      <pre>
+        {input.type} {input.name}
+      </pre>
+    </div>
+  );
+};
+
 const CircuitDisplay = ({ circuit }: { circuit: Circuit }) => {
   return (
     <div>
       this is this circuit: <br />
       <pre>{circuit.evaluate.toString()}</pre>
+      <br />
+      and these are its inputs: <br />
+      {circuit.inputs.map((input, i) => (
+        <InputDisplay key={i} input={input} />
+      ))}
     </div>
   );
 };
