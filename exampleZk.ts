@@ -6,7 +6,7 @@ const { provingKey, verifierKey, toxicWaste } = trustedSetup(
   "this is a random string"
 );
 
-const circuit = new Circuit(
+export const fibonacciCircuit = new Circuit(
   [
     {
       name: "fibonacciNumber",
@@ -18,7 +18,7 @@ const circuit = new Circuit(
   }
 );
 
-const proof = generateProof(circuit, provingKey, [
+const proof = generateProof(fibonacciCircuit, provingKey, [
   {
     name: "fibonacciNumber",
     type: InputType.Public,

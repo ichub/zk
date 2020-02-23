@@ -1,11 +1,21 @@
 import * as React from "react";
 import ReactDOM from "react-dom";
-import { testExample } from "./exampleZk";
+import { testExample, fibonacciCircuit } from "./exampleZk";
+import { Circuit } from "./zk";
 
 const App = () => {
   return (
     <div>
-      <div>{testExample() + ""}</div>
+      <CircuitDisplay circuit={fibonacciCircuit} />
+    </div>
+  );
+};
+
+const CircuitDisplay = ({ circuit }: { circuit: Circuit }) => {
+  return (
+    <div>
+      this is this circuit: <br />
+      <pre>{circuit.evaluate.toString()}</pre>
     </div>
   );
 };
