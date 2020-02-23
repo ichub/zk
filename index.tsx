@@ -6,10 +6,11 @@ import {
   InputType,
   generateProof,
   verify,
-  trustedSetup
+  trustedSetup,
+  PublicInputWithValue
 } from "./zk";
 import styled from "styled-components";
-import { useState } from "react";
+import { useState, createRef } from "react";
 
 export const fibonacciCircuit = new Circuit(
   [
@@ -103,22 +104,40 @@ const GenerateProof = ({ circuit }: { circuit: Circuit }) => {
 };
 
 const Verifier = ({ circuit }: { circuit: Circuit }) => {
+  const publicInputs = circuit.inputs.filter(i => i.type === InputType.Public);
+  const inputRefs = publicInputs.map(() => createRef<HTMLInputElement>());
+  const proofRef = createRef<HTMLInputElement>();
+  const verifierKeyRef = createRef<HTMLInputElement>();
+
+  function doTheVerification() {
+    const values = publicInputs.map((input, i) => {
+      return {
+        ...input,
+        value: inputRefs[i].current.value
+      } as PublicInputWithValue;
+    });
+
+    const isSuccess = verify(values, proofRef.current.value);
+
+    alert(isSuccess);
+  }
+
   return (
     <Container>
       <h3>verifier</h3>
-      verifier key: <input type="text" /> <br />
-      proof: <input type="text" /> <br />
+      verifier key: <input ref={verifierKeyRef} type="text" /> <br />
+      proof: <input ref={proofRef} type="text" /> <br />
       these are the public inputs: <br />
       <br />
-      {circuit.inputs
-        .filter(i => i.type === InputType.Public)
-        .map((input, i) => {
-          return (
-            <span key={i}>
-              {input.name}: <input type="text" />
-            </span>
-          );
-        })}
+      {publicInputs.map((input, i) => {
+        return (
+          <span key={i}>
+            {input.name}: <input ref={inputRefs[i]} type="text" />
+          </span>
+        );
+      })}
+      <br />
+      <input type="button" value="verify" onClick={doTheVerification} />
     </Container>
   );
 };
@@ -152,6 +171,8 @@ const Container = styled.div`
   margin: 8px;
   padding: 8px;
   padding-top: 0;
+  display: inline-block;
+  width: 300px;
 `;
 
 const Label = styled.span`
