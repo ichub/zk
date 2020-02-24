@@ -54,13 +54,17 @@ export const fibonacciCircuit = new Circuit(
 
 const App = () => {
   return (
-    <>
+    <AppContainer>
       <GlobalStyle />
-      <TrustedSetup />
-      <CircuitDisplay circuit={fibonacciCircuit} />
-      <GenerateProof circuit={fibonacciCircuit} />
-      <Verifier circuit={fibonacciCircuit} />
-    </>
+
+      <ContentContainer>
+        <Title>JSSnark</Title>
+        <TrustedSetup />
+        <CircuitDisplay circuit={fibonacciCircuit} />
+        <GenerateProof circuit={fibonacciCircuit} />
+        <Verifier circuit={fibonacciCircuit} />
+      </ContentContainer>
+    </AppContainer>
   );
 };
 
@@ -199,10 +203,11 @@ const CircuitDisplay = ({ circuit }: { circuit: Circuit }) => {
 };
 
 const Container = styled.div`
-  border: 1px solid black;
+  border: 1px solid grey;
   margin: 8px;
   padding: 8px;
   padding-top: 0;
+  border-radius: 4px;
 `;
 
 const Label = styled.span`
@@ -235,6 +240,25 @@ const Input = styled.textarea`
 
 const InputLabel = styled.div`
   font-weight: bold;
+`;
+
+const AppContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ContentContainer = styled.div`
+  width: 600px;
+  margin-top: 32px;
+  margin-bottom: 64px;
+`;
+
+const Title = styled.h1`
+  width: 100%;
+  text-align: center;
+  margin-bottom: 32px;
+  font-size: 3em;
 `;
 
 const div = document.createElement("div");
