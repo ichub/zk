@@ -132,7 +132,7 @@ const Verifier = ({ circuit }: { circuit: Circuit }) => {
   const proofRef = createRef<HTMLTextAreaElement>();
   const verifierKeyRef = createRef<HTMLTextAreaElement>();
 
-  function doTheVerification() {
+  async function doTheVerification() {
     const values = publicInputs.map((input, i) => {
       return {
         ...input,
@@ -140,7 +140,11 @@ const Verifier = ({ circuit }: { circuit: Circuit }) => {
       } as PublicInputWithValue;
     });
 
-    const isSuccess = verify(values, proofRef.current.value.trim());
+    const isSuccess = await verify(
+      values,
+      proofRef.current.value.trim(),
+      verifierKeyRef.current.value
+    );
 
     alert(isSuccess);
   }

@@ -1,6 +1,6 @@
 import { digestMessage } from "./utils";
 
-const base64Encode = true;
+const base64Encode = false;
 
 export type VerifierKey = string;
 export type ProvingKey = string;
@@ -35,23 +35,41 @@ export async function trustedSetup(
   verifierKey: VerifierKey;
   toxicWaste: ToxicWaste;
 }> {
+  let provingKey = await digestMessage("salt" + trueRandomness);
+  let verifierKey = await digestMessage(provingKey);
+
   return {
-    provingKey: await digestMessage("salt" + trueRandomness),
-    verifierKey: await digestMessage("salt2" + trueRandomness),
+    provingKey,
+    verifierKey,
     toxicWaste: await digestMessage("this is toxic waste" + trueRandomness)
   };
 }
 
-export function verify(publicInputs: PublicInputWithValue[], proof: Proof) {
+export async function verify(
+  publicInputs: PublicInputWithValue[],
+  proof: Proof,
+  verifierKey: VerifierKey
+): boolean {
   let encodedProofValues: any;
 
   if (base64Encode) {
-    proof = atob(proof);
+    try {
+      proof = atob(proof);
+    } catch {
+      return false;
+    }
   }
 
   try {
     encodedProofValues = JSON.parse(proof);
   } catch {
+    return false;
+  }
+
+  let provingKey = encodedProofValues.provingKey;
+  let expectedValidatorKey = await digestMessage(provingKey);
+
+  if (expectedValidatorKey != verifierKey) {
     return false;
   }
 
