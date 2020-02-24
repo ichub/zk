@@ -90,7 +90,7 @@ const TrustedSetup = () => {
 };
 
 const GenerateProof = ({ circuit }: { circuit: Circuit }) => {
-  const provingKeyRef = createRef<HTMLInputElement>();
+  const provingKeyRef = createRef<HTMLTextAreaElement>();
   const inputRefs = circuit.inputs.map(() => createRef<HTMLTextAreaElement>());
 
   const [proof, setProof] = useState("");
@@ -113,7 +113,7 @@ const GenerateProof = ({ circuit }: { circuit: Circuit }) => {
     <Container>
       <h2>proof generator</h2>
       circuit: <Label>(circuit displayed above)</Label> <br />
-      proving key: <input ref={provingKeyRef} type="text" /> <br />
+      <InputLabel>proving key:</InputLabel> <Input ref={provingKeyRef} /> <br />
       {circuit.inputs.map((input, i) => (
         <div key={i}>
           <InputLabel>{input.name}:</InputLabel> <Input ref={inputRefs[i]} />
@@ -121,7 +121,11 @@ const GenerateProof = ({ circuit }: { circuit: Circuit }) => {
       ))}
       <br />
       <input type="button" value="generate proof" onClick={doProof} /> <br />
-      proof: <WordWrap>{proof}</WordWrap>
+      {proof && (
+        <div>
+          <br /> <Proof>{proof}</Proof>
+        </div>
+      )}
     </Container>
   );
 };
@@ -214,15 +218,19 @@ const GlobalStyle = createGlobalStyle`
     }
 `;
 
-const WordWrap = styled.div`
+const Proof = styled.div`
   word-break: break-all;
   width: 100%;
   background-color: grey;
+  padding: 8px;
+  box-sizing: border-box;
 `;
 
 const Input = styled.textarea`
   width: 100%;
   height: 50px;
+  margin-top: 4px;
+  margin-bottom: 8px;
 `;
 
 const InputLabel = styled.div`
