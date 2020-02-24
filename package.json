@@ -3,7 +3,7 @@
     "typescript": "^3.8.2"
   },
   "scripts": {
-    "build": "NODE_ENV=production parcel build index.html --out-dir docs --no-source-maps --public-url ./zk/"
+    "build": "NODE_ENV=production parcel build index.html --out-dir docs --no-source-maps --public-url https://ichub.github.io/zk/"
   },
   "dependencies": {
     "@types/react": "^16.9.22",
