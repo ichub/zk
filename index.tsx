@@ -60,8 +60,8 @@ const App = () => {
 
       <ContentContainer>
         <Title>JSSnark</Title>
-        <TrustedSetup />
         <CircuitDisplay circuit={fibonacciCircuit} />
+        <TrustedSetup />
         <GenerateProof circuit={fibonacciCircuit} />
         <Verifier circuit={fibonacciCircuit} />
       </ContentContainer>
@@ -117,7 +117,7 @@ const GenerateProof = ({ circuit }: { circuit: Circuit }) => {
   return (
     <Container>
       <h2>proof generator</h2>
-      circuit: <Label>(circuit displayed above)</Label> <br />
+      <b>circuit:</b> <Label>(circuit displayed above)</Label> <br />
       <InputLabel>proving key:</InputLabel> <Input ref={provingKeyRef} /> <br />
       {circuit.inputs.map((input, i) => (
         <div key={i}>
@@ -183,7 +183,7 @@ const InputDisplay = ({ input }: { input: Input }) => {
   return (
     <div>
       <pre>
-        <b>{input.type}</b> {input.name}
+        <b>{input.type}</b> <VariableName>{input.name}</VariableName>
       </pre>
     </div>
   );
@@ -197,7 +197,6 @@ const CircuitDisplay = ({ circuit }: { circuit: Circuit }) => {
         {circuit.evaluate.toString()}
       </Highlight>
       <br />
-      and these are its inputs: <br />
       {circuit.inputs.map((input, i) => (
         <InputDisplay key={i} input={input} />
       ))}
@@ -239,6 +238,13 @@ const Input = styled.textarea`
   height: 50px;
   margin-top: 4px;
   margin-bottom: 8px;
+  resize: none;
+  border: 1px dotted grey;
+
+  &:focus {
+    outline-width: 0;
+    border: 1px solid #0377fc;
+  }
 `;
 
 const InputLabel = styled.div`
@@ -262,6 +268,10 @@ const Title = styled.h1`
   text-align: center;
   margin-bottom: 32px;
   font-size: 3em;
+`;
+
+const VariableName = styled.span`
+  color: #0377fc;
 `;
 
 const div = document.createElement("div");
