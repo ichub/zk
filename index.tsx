@@ -12,6 +12,7 @@ import {
 } from "./zk";
 import styled, { createGlobalStyle } from "styled-components";
 import { useState, createRef } from "react";
+import Highlight from "react-highlight";
 
 export const fibonacciCircuit = new Circuit(
   [
@@ -192,7 +193,9 @@ const CircuitDisplay = ({ circuit }: { circuit: Circuit }) => {
   return (
     <Container>
       <h2>circuit</h2>
-      <pre>{circuit.evaluate.toString()}</pre>
+      <Highlight className="javascript">
+        {circuit.evaluate.toString()}
+      </Highlight>
       <br />
       and these are its inputs: <br />
       {circuit.inputs.map((input, i) => (
