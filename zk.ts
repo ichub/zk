@@ -1,5 +1,7 @@
 import { digestMessage } from "./utils";
 
+const base64Encode = true;
+
 export type VerifierKey = string;
 export type ProvingKey = string;
 export type ToxicWaste = string;
@@ -14,10 +16,7 @@ export type PrivateInputWithValue = PublicInput & { value: string };
 
 export type Input = PublicInput | PrivateInput;
 export type InputWithValue = PublicInputWithValue | PrivateInputWithValue;
-export type Evaluator = (
-  circuit: Circuit,
-  inputValues: InputWithValue[]
-) => void;
+export type Evaluator = (inputValues: InputWithValue[]) => void;
 
 export class Circuit {
   public readonly inputs: Input[];
@@ -44,17 +43,41 @@ export async function trustedSetup(
 }
 
 export function verify(publicInputs: PublicInputWithValue[], proof: Proof) {
-  let encodedProofValues;
+  let encodedProofValues: any;
+
+  if (base64Encode) {
+    proof = atob(proof);
+  }
 
   try {
-    encodedProofValues = JSON.parse(atob(proof));
+    encodedProofValues = JSON.parse(proof);
   } catch {
     return false;
   }
 
-  console.log(encodedProofValues);
+  for (let i = 0; i < publicInputs.length; i++) {
+    let actualValue = encodedProofValues.inputValues.find(
+      val => val.name === publicInputs[i].name
+    );
 
-  return true;
+    actualValue.value = publicInputs[i].value;
+  }
+
+  const func = encodedProofValues.circuit.evaluate;
+
+  const evaluated = `(${func})(${JSON.stringify(
+    encodedProofValues.inputValues
+  )})`;
+
+  console.log(evaluated);
+
+  let success = false;
+
+  try {
+    success = eval(evaluated);
+  } catch {}
+
+  return success;
 }
 
 export function generateProof(
@@ -63,13 +86,16 @@ export function generateProof(
   inputValues: InputWithValue[]
 ): Proof {
   const obj = {
+    circuit: { ...circuit, evaluate: circuit.evaluate.toString() },
     provingKey,
     inputValues
   };
 
-  console.log(obj);
-
-  return btoa(JSON.stringify(obj));
+  if (base64Encode) {
+    return btoa(JSON.stringify(obj));
+  } else {
+    return JSON.stringify(obj);
+  }
 }
 
 export enum InputType {

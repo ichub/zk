@@ -24,13 +24,13 @@ export const fibonacciCircuit = new Circuit(
       type: InputType.Public
     }
   ],
-  (circuit, inputValues) => {
-    function fibonacci(num) {
+  inputValues => {
+    function fibonacci(num: number) {
       var a = 1,
         b = 0,
         temp;
 
-      while (num >= 0) {
+      while (num > 0) {
         temp = a;
         a = a + b;
         b = temp;
@@ -40,13 +40,15 @@ export const fibonacciCircuit = new Circuit(
       return b;
     }
 
-    const fibonacciNumber = inputValues.find(i => i.name === "fibonacciNumber")
-      .value;
-    const n = inputValues.find(i => i.name === "n").value;
+    const fibonacciNumber = parseInt(
+      inputValues.find(i => i.name === "fibonacciNumber").value
+    );
+    const n = parseInt(inputValues.find(i => i.name === "n").value);
 
     console.log("testing: ", fibonacciNumber, n);
+    console.log("expected", fibonacci(n));
 
-    return fibonacci(n) === parseInt(fibonacciNumber, 10);
+    return fibonacci(n) === fibonacciNumber;
   }
 );
 
@@ -119,7 +121,7 @@ const GenerateProof = ({ circuit }: { circuit: Circuit }) => {
       ))}
       <br />
       <input type="button" value="generate proof" onClick={doProof} /> <br />
-      proof: <Label>{proof}</Label>
+      proof: <WordWrap>{proof}</WordWrap>
     </Container>
   );
 };
@@ -138,7 +140,7 @@ const Verifier = ({ circuit }: { circuit: Circuit }) => {
       } as PublicInputWithValue;
     });
 
-    const isSuccess = verify(values, proofRef.current.value);
+    const isSuccess = verify(values, proofRef.current.value.trim());
 
     alert(isSuccess);
   }
@@ -207,6 +209,12 @@ const GlobalStyle = createGlobalStyle`
     body {
         font-family: monospace;
     }
+`;
+
+const WordWrap = styled.div`
+  word-break: break-all;
+  width: 100%;
+  background-color: grey;
 `;
 
 const div = document.createElement("div");
