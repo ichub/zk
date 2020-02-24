@@ -1,6 +1,6 @@
 import { digestMessage } from "./utils";
 
-const base64Encode = false;
+const ENCODE = false;
 
 export type VerifierKey = string;
 export type ProvingKey = string;
@@ -49,10 +49,10 @@ export async function verify(
   publicInputs: PublicInputWithValue[],
   proof: Proof,
   verifierKey: VerifierKey
-): boolean {
+) {
   let encodedProofValues: any;
 
-  if (base64Encode) {
+  if (ENCODE) {
     try {
       proof = atob(proof);
     } catch {
@@ -109,7 +109,7 @@ export function generateProof(
     inputValues
   };
 
-  if (base64Encode) {
+  if (ENCODE) {
     return btoa(JSON.stringify(obj));
   } else {
     return JSON.stringify(obj);

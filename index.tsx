@@ -65,11 +65,7 @@ const App = () => {
 };
 
 const TrustedSetup = () => {
-  const [setupValues, setSetupValues] = useState({
-    provingKey: "",
-    verifierKey: "",
-    toxicWaste: ""
-  });
+  const [setupValues, setSetupValues] = useState(null);
 
   async function setup() {
     setSetupValues(await trustedSetup(Math.random() + ""));
@@ -77,21 +73,25 @@ const TrustedSetup = () => {
 
   return (
     <Container>
-      <h3>trusted setup</h3>
+      <h2>trusted setup</h2>
       <input type="button" value="do the setup" onClick={setup} /> <br /> <br />
-      proving key: <Label>{setupValues.provingKey} </Label>
-      <br />
-      verifier key: <Label>{setupValues.verifierKey} </Label>
-      <br />
-      toxic waste: <Label>{setupValues.toxicWaste} </Label>
-      <br />
+      {setupValues && (
+        <div>
+          proving key: <Label>{setupValues.provingKey} </Label>
+          <br />
+          verifier key: <Label>{setupValues.verifierKey} </Label>
+          <br />
+          toxic waste: <Label>{setupValues.toxicWaste} </Label>
+          <br />
+        </div>
+      )}
     </Container>
   );
 };
 
 const GenerateProof = ({ circuit }: { circuit: Circuit }) => {
   const provingKeyRef = createRef<HTMLInputElement>();
-  const inputRefs = circuit.inputs.map(() => createRef<HTMLInputElement>());
+  const inputRefs = circuit.inputs.map(() => createRef<HTMLTextAreaElement>());
 
   const [proof, setProof] = useState("");
 
@@ -111,12 +111,12 @@ const GenerateProof = ({ circuit }: { circuit: Circuit }) => {
 
   return (
     <Container>
-      <h3>proof generator</h3>
+      <h2>proof generator</h2>
       circuit: <Label>(circuit displayed above)</Label> <br />
       proving key: <input ref={provingKeyRef} type="text" /> <br />
       {circuit.inputs.map((input, i) => (
         <div key={i}>
-          {input.name}: <input ref={inputRefs[i]} type="text" />
+          <InputLabel>{input.name}:</InputLabel> <Input ref={inputRefs[i]} />
         </div>
       ))}
       <br />
@@ -151,15 +151,16 @@ const Verifier = ({ circuit }: { circuit: Circuit }) => {
 
   return (
     <Container>
-      <h3>verifier</h3>
-      verifier key: <textarea ref={verifierKeyRef} /> <br />
-      proof: <textarea ref={proofRef} /> <br />
-      these are the public inputs: <br />
+      <h2>verifier</h2>
+      <InputLabel>verifier key: </InputLabel> <Input ref={verifierKeyRef} />{" "}
+      <br />
+      <InputLabel>proof: </InputLabel>
+      <Input ref={proofRef} /> <br />
       <br />
       {publicInputs.map((input, i) => {
         return (
           <span key={i}>
-            {input.name}: <textarea ref={inputRefs[i]} />
+            <InputLabel>{input.name}:</InputLabel> <Input ref={inputRefs[i]} />
           </span>
         );
       })}
@@ -182,7 +183,7 @@ const InputDisplay = ({ input }: { input: Input }) => {
 const CircuitDisplay = ({ circuit }: { circuit: Circuit }) => {
   return (
     <Container>
-      <h3>circuit</h3>
+      <h2>circuit</h2>
       <pre>{circuit.evaluate.toString()}</pre>
       <br />
       and these are its inputs: <br />
@@ -201,9 +202,7 @@ const Container = styled.div`
 `;
 
 const Label = styled.span`
-  background-color: rgb(200, 200, 200);
   color: grey;
-  border-radius: 4px;
   display: inline-block;
   padding: 4px;
   font-size: 80%;
@@ -219,6 +218,15 @@ const WordWrap = styled.div`
   word-break: break-all;
   width: 100%;
   background-color: grey;
+`;
+
+const Input = styled.textarea`
+  width: 100%;
+  height: 50px;
+`;
+
+const InputLabel = styled.div`
+  font-weight: bold;
 `;
 
 const div = document.createElement("div");

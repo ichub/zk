@@ -2,6 +2,9 @@
   "devDependencies": {
     "typescript": "^3.8.2"
   },
+  "scripts": {
+    "build": "asdf"
+  },
   "dependencies": {
     "@types/react": "^16.9.22",
     "@types/react-dom": "^16.9.5",
